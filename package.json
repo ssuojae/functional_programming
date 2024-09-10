@@ -2,7 +2,7 @@
   "name": "functional_programming",
   "version": "1.0.0",
   "description": "",
-  "main": "fundamental/01.PureFunction.js",
+  "main": "javascript/02.OOPtoFP.js.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
