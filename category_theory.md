@@ -3,8 +3,6 @@
 
 <img src="img.png" width="500">
 
-<br/>
-<br/>
 
 책 내용의 난이도가 높아 이해하지 못한 부분은 제외하고 이해한 부분을 중심으로 정리했습니다 :) <br/>
 연한 텍스트는 인용구, 기본 텍스트는 저의 생각을 정리해보았습니다. :)
@@ -107,6 +105,58 @@ console.log(result.log);   // "Checked if 4 is even. Negated the value. "
 <br/>
 
 #### CHAPTER05. 곱과 합
+```javascript
+// 곱(Product): 두 값을 결합하여 하나의 튜플로 나타냄
+function product(a, b) {
+  return [a, b]; // 튜플 형태로 두 값을 반환
+}
+
+const pair = product(3, "apple");
+console.log(pair);         // [3, "apple"]
+console.log(pair[0]);      // 3 (첫 번째 값)
+console.log(pair[1]);      // "apple" (두 번째 값)
+```
+```javascript
+// 합(Coproduct): Either 패턴으로 Left와 Right 값을 처리
+function Left(value) {
+  return { type: 'Left', value };
+}
+
+function Right(value) {
+  return { type: 'Right', value };
+}
+
+// 값을 선택하는 함수
+function processEither(either) {
+  if (either.type === 'Left') {
+    return `Left value is: ${either.value}`;
+  } else {
+    return `Right value is: ${either.value}`;
+  }
+}
+
+const leftValue = Left(42);
+const rightValue = Right("Hello");
+
+console.log(processEither(leftValue));  // Left value is: 42
+console.log(processEither(rightValue)); // Right value is: Hello
+```
+
+- 대상간 관계를 표현함에 있어 결합법칙을 만족해야한다는 조건때문에 곱과 합이 존재하게 된다. (사상과 관계의 차이: 일방향에 대한 조건)
+- **곱(Product)** 은 두 대상을 조합하여 새로운 대상을 만들고, 그 대상에서 원래 두 대상으로 향하는 투영 함수(projections)가 존재하는 상황을 말한다. 따라서 곱의 의미는 두 값이 동시에 존재하는 상황을 나타낸다.
+- **합(Coproduct)** 은 곱과 반대이다. 두 대상을 결합하는 것이지만, 이때는 두 대상에서 하나의 대상 C로 삽입 함수를 사용해 연결하는 방식이다.함수형 프로그래밍에서는 Either 타입이 합의 역할을 힌다. (Either a b는 a 또는 b 중 하나를 선택하는 타입)
+- 카테고리 이론에서의 **합(Coproduct)** 은 합집합과 유사하지만, 추가적인 구조가 있다. 특히 **서로소 유니온(Disjoint Union)** 의 개념이 중요한데, 이는 서로 겹치지 않는 집합들을 합친다는 것을 의미한다. 
+- 두 집합 a와 b가 있을 때, Coproduct에서는 단순히 원소들을 합치는 것 이상으로 각 원소가 어디서 왔는지 식별할 수 있는 구조를 제공한다.
+- 즉, A와 B의 원소가 어디서 왔는지 알 수 있도록 태그가 붙는 구조가 됩니다. 이를 프로그래밍에서는 Either 타입이나 Tagged Union이라고도 부른다.
+- 클래스 구조는 곱(Product)의 사례: 여러 속성을 동시에 포함하는 데이터 구조로, 모든 속성을 하나의 객체로 결합하여 관리하는 상황. 예를 들어 사용자 정보(이름, 이메일, 나이)를 객체로 묶어 처리할 때 사용된다.
+- 유니온(Union)과 이더(Either)는 합(Coproduct)의 사례: 여러 옵션 중 하나를 선택해서 사용하는 경우에 해당한다.
+- 결제 수단 선택에서 합(Coproduct) 개념 사용: 결제 시스템에서 신용카드, 페이팔, 계좌이체 등의 결제 방법 중 하나를 선택하는 상황은 합의 사례이다. 이때 여러 옵션 중 하나만 선택되어야 하므로 합의 개념 적용
+- 에러 처리에서 합의 개념 적용: 프로그램에서 에러 처리는 성공과 실패 중 하나만 발생한다. 이때도 합의 개념을 사용하여 결과를 처리. 성공 또는 실패라는 두 가지 중 하나를 선택하는 구조.
+- 곱(Product)은 동시에 여러 정보를 포함: 예를 들어, 사용자 정보나 상품 정보를 다룰 때 각각의 속성들을 하나의 데이터 구조로 결합해야 한다. 이러한 상황에서는 곱의 개념을 사용하여 여러 속성을 하나의 객체로 처리.
+
+
+
+
 
 >
 
