@@ -92,3 +92,35 @@ _go(users,
     _filter(user => user.age < 30),
     _map(_get('age')),
     console.log);
+
+// _each의 다형성 높이기
+
+// 1. each에 null 넣어도 에러 안나게
+_get('length')
+
+var _get = _curryr(function (obj, key) {
+    return obj == null ? undefined : obj[key];
+})
+
+function _is_object(obj) {
+    return typeof obj == 'object' && !!obj;
+}
+
+function _keys(obj) {
+    return _is_object(obj) ? Object.keys(obj) : [];
+}
+
+function _each(list, iter) {
+    var keys = _keys(list, iter)
+    for (var i = 0, len = keys.length; i < len; i++) {
+        iter(list[keys[i]]);
+    }
+}
+
+_each({
+    13: 'ID',
+    19: 'HD',
+    29: 'YD',
+}, function(name) {
+    console.log(name);
+})
