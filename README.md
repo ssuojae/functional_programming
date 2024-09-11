@@ -1,10 +1,10 @@
 ## Category Theory for Programmer
 
-- [이론 정리]()
-
-## Fundamental
+- [이론 살펴보기](https://github.com/ssuojae/functional_programming/blob/main/category_theory.md)
 
 <br/>
+
+## Fundamental
 
 #### #1 .함수형 프로그래밍은 평가 시점으로부터 자유롭다.
 
