@@ -6,6 +6,12 @@
 <br/>
 <br/>
 
+책 내용의 난이도가 높아 이해하지 못한 부분은 제외하고 이해한 부분을 중심으로 정리했습니다 :) <br/>
+연한 텍스트는 인용구, 기본 텍스트는 저의 생각을 정리해보았습니다. :)
+
+
+<br/>
+
 #### CHAPTER01. 카테고리: 합성의 본질
 
 >카테고리는 대상과 그 사이를 이어주는 화살표로 구성된다. 따라서 카테고리의 본질은 합성이다. 반드시 대상 A에서 C로 향하는 화살표, 즉 A->B와 B->C의 합성이 존재해야한다.
@@ -64,12 +70,45 @@ console.log(resultWithIdentity);
 <br/>
 
 #### CHAPTER04. 크라이슬리 카테고리
+```javascript
+// Writer 모나드를 간단히 표현하기 위한 구조
+function writer(value, log) {
+return { value, log };
+}
 
-- 
+// isEven 함수: 숫자가 짝수인지 확인하고 로그를 남김
+function isEven(n) {
+const result = n % 2 === 0;
+return writer(result, `Checked if ${n} is even. `);
+}
 
+// negate 함수: 논리값을 반전시키고 로그를 남김
+function negate(b) {
+return writer(!b, `Negated the value. `);
+}
 
+// 두 함수를 합성: 숫자를 짝수인지 확인하고 결과를 반전
+function isOdd(n) {
+const p1 = isEven(n);
+const p2 = negate(p1.value);
+return writer(p2.value, p1.log + p2.log); // 값과 로그를 합침
+}
+
+// 사용 예시
+const result = isOdd(4);
+console.log(result.value); // false
+console.log(result.log);   // "Checked if 4 is even. Negated the value. "
+```
+- 순수함수를 유지하기 위해서는 메모이제이션이라는 문제가 있다. 전역없이 메모이제이션을 해가며 함수를 계속 호출해야하기 때문이다. 따라서 재귀함수가 FP 전반적으로 도입될 수 밖에 없다는 것을 깨달았다.
+- Writer 모나드와 Writer 카테고리는 함수형 프로그래밍에서 사이드 이펙트를 다루는 한 방법이다.
+- 특히, 순수 함수를 유지하면서도 부수적인 정보(예: 로그, 상태)를 처리할 수 있도록 도와준다.
+- Writer 개념을 통해 Exception 같은 참조투명성을 깨뜨리는 행위없이 순수함수를 통해 기타정보를 처리할 수 있다.
 
 <br/>
+
+#### CHAPTER05. 곱과 합
+
+>
 
 
 
