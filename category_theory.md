@@ -143,7 +143,18 @@ console.log(processEither(rightValue)); // Right value is: Hello
 ```
 
 - 대상간 관계를 표현함에 있어 결합법칙을 만족해야한다는 조건때문에 곱과 합이 존재하게 된다. (사상과 관계의 차이: 일방향에 대한 조건)
+
+<img src="img_4.png" width="300">
+
+<br/>
+
 - **곱(Product)** 은 두 대상을 조합하여 새로운 대상을 만들고, 그 대상에서 원래 두 대상으로 향하는 투영 함수(projections)가 존재하는 상황을 말한다. 따라서 곱의 의미는 두 값이 동시에 존재하는 상황을 나타낸다.
+
+
+<img src="img_3.png" width="300">
+
+<br/>
+
 - **합(Coproduct)** 은 곱과 반대이다. 두 대상을 결합하는 것이지만, 이때는 두 대상에서 하나의 대상 C로 삽입 함수를 사용해 연결하는 방식이다.함수형 프로그래밍에서는 Either 타입이 합의 역할을 한다. (Either a b는 a 또는 b 중 하나를 선택하는 타입)
 - 카테고리 이론에서의 **합(Coproduct)** 은 합집합과 유사하지만, 추가적인 구조가 있다. 특히 **서로소 유니온(Disjoint Union)** 의 개념이 중요한데, 이는 서로 겹치지 않는 집합들을 합친다는 것을 의미한다. 
 - 두 집합 a와 b가 있을 때, Coproduct에서는 단순히 원소들을 합치는 것 이상으로 각 원소가 어디서 왔는지 식별할 수 있는 구조를 제공한다.
@@ -155,8 +166,7 @@ console.log(processEither(rightValue)); // Right value is: Hello
 - 곱(Product)은 동시에 여러 정보를 포함: 예를 들어, 사용자 정보나 상품 정보를 다룰 때 각각의 속성들을 하나의 데이터 구조로 결합해야 한다. 이러한 상황에서는 곱의 개념을 사용하여 여러 속성을 하나의 객체로 처리.
 - iOS의 예로들자면 Result 타입에서 Result<Value, CustomError>는 곱과 합의 개념을 동시에 담고 있다.
 - Value의 경우 곱(Product): Value는 여러 속성들을 함께 포함한다. 예를 들어, 하나의 Value에 다양한 정보를 담고 있을 때, 이는 곱의 개념에 해당한다.
-- esult<Value, CustomError>는 합(Coproduct): Result는 성공(Value) 또는 실패(CustomError) 중 하나를 가진다. 즉, 두 값 중 하나만 선택될 수 있기 때문에 합의 개념을 반영.
-
+- Result<Value, CustomError>는 합(Coproduct): Result는 성공(Value) 또는 실패(CustomError) 중 하나를 가진다. 즉, 두 값 중 하나만 선택될 수 있기 때문에 합의 개념을 반영.
 
 
 
