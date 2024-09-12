@@ -168,10 +168,81 @@ console.log(processEither(rightValue)); // Right value is: Hello
 - Value의 경우 곱(Product): Value는 여러 속성들을 함께 포함한다. 예를 들어, 하나의 Value에 다양한 정보를 담고 있을 때, 이는 곱의 개념에 해당한다.
 - Result<Value, CustomError>는 합(Coproduct): Result는 성공(Value) 또는 실패(CustomError) 중 하나를 가진다. 즉, 두 값 중 하나만 선택될 수 있기 때문에 합의 개념을 반영.
 
+<br/>
 
+#### CHAPTER06. 단순한 대수적 타입
 
+> 곱 타입과 합 타입 모두 각각 데이터 구조를 정의할 때 유용하게 사용할 수 있지만, 실질적인 강점은 . 둘을 결합할 . 나타난다. 
 
->
+>만약 (a * b) * c와 a * (b * c)를 모노이드인 곱 연산의 관점에서 바라본다면, 이 연산은 교환법칙을 만족하기 때문에 완벽히 동일(Equal)하다고 이야기할 수 있다.
 
+>하지만 곱 타입의 경우 각 튜플 안에 있는 요소들이 서로 정보의 손실 없이 매핑될 수 있는 일대일 대응함수가 존재하는 동형(Isomorphic)일 뿐이다. 즉, 두 곱 타입이 동형사상을 통해 서로 매핑이 가능하므로 “동형성에 의해 같다”고 말할 수는 있겠지만 엄밀한 의미에서 동일하지는 않다는 것이다.
 
+```javascript
+// 데이터 구조의 결합 예시
+const tuple1 = { person: { name: "Alice", age: 30 }, city: "New York" };
+const tuple2 = { name: "Alice", address: { age: 30, city: "New York" } };
+
+// 두 데이터를 변환하는 함수
+function transformTuple1ToTuple2(t1) {
+  return {
+    name: t1.person.name,
+    address: {
+      age: t1.person.age,
+      city: t1.city
+    }
+  };
+}
+
+function transformTuple2ToTuple1(t2) {
+  return {
+    person: {
+      name: t2.name,
+      age: t2.address.age
+    },
+    city: t2.address.city
+  };
+}
+
+const transformed1 = transformTuple1ToTuple2(tuple1); // { name: 'Alice', address: { age: 30, city: 'New York' } }
+const transformed2 = transformTuple2ToTuple1(tuple2); // { person: { name: 'Alice', age: 30 }, city: 'New York' }
+
+console.log(transformed1); // { name: 'Alice', address: { age: 30, city: 'New York' } }
+console.log(transformed2); // { person: { name: 'Alice', age: 30 }, city: 'New York' }
+```
+- tuple1: 사람 정보가 person 객체 안에 있고, 그 사람이 사는 도시 정보는 따로 결합되어 있다.
+- tuple2: 이름과 주소가 결합되어 있으며, 주소 안에 나이와 도시 정보가 들어 있다.
+- 이 두 데이터 구조는 결합 순서만 다를 뿐, 본질적으로 동일한 데이터를 표현하고 있다. 
+- 이를 변환하는 함수들을 만들어 어떤 결합 형태로 변형해도 같은 정보를 유지한다는 것이 곱 타입의 결합법칙이다.
+
+<br/>
+
+```javascript
+const originalMap = { key1: "value1", key2: "value2" };
+
+// 새로운 맵을 만들어서 기존 맵에 값을 추가하거나 수정
+const updatedMap = { ...originalMap, key1: "newValue1", key3: "value3" };
+
+console.log(originalMap);  // { key1: "value1", key2: "value2" } (원본은 그대로)
+console.log(updatedMap);   // { key1: "newValue1", key2: "value2", key3: "value3" } (새 맵)
+```
+
+- 맵(Map)이나 딕셔너리(Dictionary)를 수정할 때 기존 데이터를 직접 수정하지 않고 새로운 데이터 구조를 생성하는 방식을 사용해야한다.
+
+<br/>
+
+```javascript
+const person = { name: "Alice", age: 30 };
+
+// 패턴 매칭처럼 객체 분해 (destructuring)
+const { name, age } = person;
+
+console.log(name); // Alice
+console.log(age);  // 30
+```
+
+- FP에서는 데이터의 구조를 그대로 보존하면서 부분적으로 다시 분해해서 사용한다.
+- 불변 데이터를 분해하는 방법으로 대표적인 것이 패턴매치이다.
+
+<br/>
 
