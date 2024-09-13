@@ -142,6 +142,18 @@ console.log(names);
 
 #### #5. 데이터 구조에 대한 평가시점을 최대한 뒤로 미루어 처리한다.
 
+```javascript
+_map = _curryr(_map);
+
+function _identity(val) {
+    return val;
+}
+
+var _values = _map(_identity);
+
+console.log(_values(users[2])); // [3, 'JM', 32]
+```
+
 - 데이터 구조 평가 시점을 뒤로 미룰수록 다형성이라는 이점이 취해진다.
 - 즉 어떤 데이터가 오든 일단 로직들이 먼저 오고 만들어진 로직에 데이터를 마지막에 넣는 것이다.
 - 여기서 중요한 함수가 바로 `curryr` 과 같은 함수다.
