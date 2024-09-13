@@ -181,3 +181,79 @@ console.log(_reject(users, function (user) {
 
 
 var _compact = _filter(_identity);
+
+function _keys(obj) {
+    return _is_object(obj) ? Object.keys(obj) : [];
+}
+function _is_object(obj) {
+    return typeof obj == 'object' && !!obj;
+}
+
+
+function _find(list, predi) {
+    var keys = _keys(list);
+    for (var i = 0, len = keys.length; i < len; i++) {
+        var val= list[keys[i]];
+        if (predi(val)) return val;
+    }
+}
+
+console.log(_find(users, function (user) {
+    return user.id == 2;
+}))
+
+
+function _some(list, predi) {
+    for (var i = 0; i < list.length; i++) {
+        if (predi(list[i])) return true;
+    }
+    return false;
+}
+
+// age가 30 이상인 사용자가 하나라도 있는지 확인
+var isUserOver30 = _some(users, function(user) {
+    return user.age >= 30;
+});
+
+console.log(isUserOver30); // true
+
+function _some2(list, predi) {
+    predi = predi || _identity; // predi가 없으면 _identity로 설정
+    for (var i = 0; i < list.length; i++) {
+        if (predi(list[i])) return true;
+    }
+    return false;
+}
+
+console.log(_some2([null, 0, '', false, true])); // true (마지막 요소가 truthy)
+
+function _every(list, predi) {
+    predi = predi || _identity; // predi가 없으면 _identity로 설정
+    for (var i = 0; i < list.length; i++) {
+        if (!predi(list[i])) return false; // 조건을 만족하지 않으면 false 반환
+    }
+    return true; // 모든 요소가 조건을 만족하면 true 반환
+}
+
+var areAllUsersOver20 = _every(users, function(user) {
+    return user.age > 20;
+});
+console.log(areAllUsersOver20); // true (모든 사용자가 20세 이상)
+
+
+function _reduce(list, iter, memo) {
+    var i = 0;
+
+    // 초기값 memo가 주어지지 않았을 경우, 리스트의 첫 번째 요소를 memo로 설정하고 i를 1로 시작
+    if (arguments.length === 2) {
+        memo = list[0];
+        i = 1;
+    }
+
+    // 리스트 순회
+    for (; i < list.length; i++) {
+        memo = iter(memo, list[i]);
+    }
+
+    return memo;
+}

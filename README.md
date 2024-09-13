@@ -171,3 +171,30 @@ console.log(_values(users[2])); // [3, 'JM', 32]
 4. 접는 함수 - `reduce`, `min`, `max`, `group_by`, `count_by`
 
 - 위의 함수일수록 추상화 레벨이 높다.
+- 특히 어떻게든 들어오는 어떤 데이터 구조에 대응하기 위해서 별것 아닌것처럼 보였던 identity 함수 사용이 중요했다.
+
+<br/>
+<br/>
+
+#### #7. go함수를 통해 파이프라인을 구축해서 로직을 저장하고 쓸 수 있다.
+
+```javascript
+// go 함수 구현
+const go = (...args) => args.reduce((acc, fn) => fn(acc));
+
+// 예제 데이터
+const numbers = [1, 2, 3, 4, 5];
+
+// 파이프라인으로 숫자 처리하기
+const result = go(
+numbers,
+nums => nums.map(num => num * 2),     // 모든 숫자를 2배로
+nums => nums.filter(num => num > 5),  // 5보다 큰 숫자만 필터링
+nums => nums.reduce((a, b) => a + b)  // 남은 숫자의 합 구하기
+);
+
+console.log(result);  // 36
+```
+- 마치 피라미드를 쌓듯이 작은 조건 순수함수들을 가지고 더 큰 로직들을 파이프라이닝을 통해 구축할 수 있다.
+- 파이프라인 함수형 프로그래밍은 데이터 처리를 일련의 함수들로 연결하여, 데이터를 순차적으로 변환한다. 
+- 데이터의 흐름을 명확하게 만들고, 코드를 더 모듈화하고 재사용 가능하게 한다.
