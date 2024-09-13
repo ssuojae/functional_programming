@@ -172,6 +172,7 @@ console.log(_values(users[2])); // [3, 'JM', 32]
 
 - 위의 함수일수록 추상화 레벨이 높다.
 - 특히 어떻게든 들어오는 어떤 데이터 구조에 대응하기 위해서 별것 아닌것처럼 보였던 identity 함수 사용이 중요했다.
+- 위 4가지 유형에 유의하여 어떤 문제를 만났을 경우, 데이터를 어떻게 "수집하여", "거르고", "찾아내어", "접어버릴건지" 사고하는게 중요하다.
 
 <br/>
 <br/>
@@ -196,5 +197,60 @@ nums => nums.reduce((a, b) => a + b)  // 남은 숫자의 합 구하기
 console.log(result);  // 36
 ```
 - 마치 피라미드를 쌓듯이 작은 조건 순수함수들을 가지고 더 큰 로직들을 파이프라이닝을 통해 구축할 수 있다.
-- 파이프라인 함수형 프로그래밍은 데이터 처리를 일련의 함수들로 연결하여, 데이터를 순차적으로 변환한다. 
-- 데이터의 흐름을 명확하게 만들고, 코드를 더 모듈화하고 재사용 가능하게 한다.
+- 이렇게 파이프라인 함수형 프로그래밍은 데이터 처리를 일련의 함수들로 연결하여, 데이터를 순차적으로 변환한다.
+
+<br/>
+<br/>
+
+#### #8. 끝을 내는 함수들 (take, some, every, find) 을 사용할 때 지연평가를 하면 연산횟수를 줄일 수 있다.
+
+```javascript
+// 지연 평가용 go 함수 정의 (제너레이터 기반)
+const goLazy = (...args) => args.reduce((acc, fn) => fn(acc));
+
+// 제너레이터를 사용한 지연 평가 map 구현
+function* lazyMap(iterable, mapper) {
+    for (const value of iterable) {
+        yield mapper(value);
+    }
+}
+
+// 제너레이터를 사용한 지연 평가 filter 구현
+function* lazyFilter(iterable, predicate) {
+    for (const value of iterable) {
+        if (predicate(value)) {
+            yield value;
+        }
+    }
+}
+
+// 지연 평가로 n개의 요소만 반환하는 take 구현
+function* lazyTake(iterable, n) {
+    let count = 0;
+    for (const value of iterable) {
+        if (count++ >= n) return;
+        yield value;
+    }
+}
+
+// 데이터를 처리하는 지연 평가 함수
+function processDataLazy(numbers) {
+    return goLazy(
+        numbers,
+        nums => lazyMap(nums, n => n * 2),                // 각 숫자를 두 배로
+        nums => lazyFilter(nums, n => n % 3 === 0),       // 3의 배수만 필터링
+        nums => lazyTake(nums, 5)                         // 앞 5개만 가져오기
+    );
+}
+
+const numbersLazy = Array.from({ length: 1000 }, (_, i) => i + 1);
+
+// 결과 출력 (지연 평가)
+console.log([...processDataLazy(numbersLazy)]);  // 출력: [6, 12, 18, 24, 30]
+```
+
+- 예를들어 어떤 배열이 맵 -> 필터 -> take 연산을 거친다고 생각해보자
+- 이전 고차함수에서는 전체 배열을 맵하고, 또 전체 배열을 필터링하고 필터링된 전체 값중에서 take하는 방식이였다.
+- 지연평가 개념을 사용하게 되면 원소 하나씩 맵 -> 필터 -> take를 거침으로써 만약 take(5)라면 최소 5번만에 연산을 끝내버린다.
+- 이러한 연산이 가능한 이유는 함수들이 오직 순수함수로 짜여져있기 때문이다.
+
