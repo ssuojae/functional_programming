@@ -272,3 +272,9 @@ console.log(composedResult); // [4, 6, 8]
 
 <br/>
 
+#### CHAPTER08. 펑터의 특성
+
+<img src="img_5.png" width="200">
+
+- 이항펑터(Bifunctor)를 읽으면서 느꼈던건 고차함수로 컨텍스트를 가져와 같은 모노이드 범주 내에서 두개의 데이터 물줄기 흐름을 만든다는 것이었다.
+- 

@@ -1,6 +1,6 @@
-//// ====================================
-// // POINT 04. Currying
-// // ====================================
+// ====================================
+// POINT 04. Currying
+// ====================================
 function _filter(list, predi) {
     var new_list = [];
     _each(list, function (value) {
@@ -18,12 +18,13 @@ function _map(list, mapper) {
     return new_list;
 }
 
-// For문이라는 명령형대신 _each를 통한 선언형 사용
+// For문 대신 _each를 사용
 function _each(list, iter) {
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0, len =_get(list); i < len; i++) {
         iter(list[i]);
     }
 }
+
 var users = [
     {id: 1, name: 'ID', age: 36},
     {id: 2, name: 'BJ', age: 32},
@@ -36,30 +37,27 @@ var users = [
     {id: 9, name: 'DI', age: 23},
 ];
 
+// 커링 함수 정의
 function _curry(fn) {
     return function (a) {
-        // 첫 번째 인자를 받으면 두 번째 인자를 기다리는 함수 반환
         return function (b) {
-            return fn(a, b); // 두 번째 인자를 받으면 본체 함수 실행
+            return fn(a, b);
         }
     };
 }
 
-// curryr을 활용하면 순서를 바꿀 수 있다.
-// 실제 사용할 경우 유저의 이름 찾는 함수를 먼저 선언하고
-// 다음에 어떤 유저 데이터를 넣어도 수행함으로써 변하는 데이터를 이후에 평가하는 함수형 특징
+// curryr을 활용한 함수 정의
 function _curryr(fn) {
     return function (a, b) {
         return arguments.length === 2
             ? fn(a, b)
             : function (b) {
-                return fn(b, a)
-            }
-    }
+                return fn(b, a);
+            };
+    };
 }
 
-
-// 커링은 본체 함수를 값으로 들고 있다가 원하는 시점에 최종적으로 평가한다.
+// 커링 예시
 var add = _curry(function (a, b) {
     return a + b;
 });
@@ -76,18 +74,15 @@ console.log(sub(10)(5)); // 5
 var sub10 = sub(10);
 console.log(sub10(5)); // 5
 
-
 var sub2 = _curryr(function (a, b) {
     return a - b;
 })
 
-console.log(sub2(10)(5)); //-5
+console.log(sub2(10)(5)); // -5
 
-// get함수 OOP에서 FP로
+// get 함수 OOP에서 FP로
 function _get2(obj, key) {
-    return obj == null
-        ? undefined
-        : obj[key];
+    return obj == null ? undefined : obj[key];
 }
 
 var user1 = users[0];
@@ -98,15 +93,12 @@ var _get = _curryr(function (obj, key) {
     return obj == null ? undefined : obj[key];
 })
 
-
-// 다형성이 적용되는 구조는 최대한 평가시점을 늦춰야한다는 발상이 중요하다.
-// 이는 cuuryr을 통해 순서를 바꿈으로써 적용가능
+// 다형성 적용
 var get_name = _get('name');
 console.log(get_name(users[2]));
 console.log(get_name(users[3]));
 
-
-// 기존에 map을 이용했던 코드도 훨씬 간결하게 표현 가능
+// map과 filter를 커링과 함께 사용
 console.log(
     _map(
         _filter(users, function (user) {
