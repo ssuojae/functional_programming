@@ -276,5 +276,66 @@ console.log(composedResult); // [4, 6, 8]
 
 <img src="img_5.png" width="200">
 
-- 이항펑터(Bifunctor)를 읽으면서 느꼈던건 고차함수로 컨텍스트를 가져와 같은 모노이드 범주 내에서 두개의 데이터 물줄기 흐름을 만든다는 것이었다.
-- 
+```javascript
+// Pair라는 구조를 정의
+class Pair {
+  constructor(a, b) {
+    this.a = a;
+    this.b = b;
+  }
+
+  // bimap 함수는 두 개의 함수를 받아서 각각의 값에 적용
+  bimap(f, g) {
+    return new Pair(f(this.a), g(this.b));
+  }
+}
+
+// Pair 인스턴스를 만들어서 테스트
+const pair = new Pair(10, 20);
+
+// 두 개의 값을 변환하는 함수
+const newPair = pair.bimap(
+  (x) => x * 2, // 첫 번째 값에 곱하기 2 적용
+  (y) => y + 5  // 두 번째 값에 더하기 5 적용
+);
+
+console.log(newPair); // Pair { a: 20, b: 25 }
+```
+
+- 이항펑터는 두개의 대상을 다른 카테고리로 매핑하는 펑터이다.
+- 이항 연산은 단순히 두 대상을 결합하는 것이 아니라, 두 대상을 결합할 때 그들 사이의 사상도 결합하도록 해야 하며, 이것이 이항 펑터의 역할이다. 즉 합이 아닌 곱의 개념이 들어가야한다.
+
+<br/>
+
+<img src="img_6.png" width="300">
+
+```javascript
+// 공변펑터 (Covariant Functor)
+const numbers = [1, 2, 3];
+const doubled = numbers.map(x => x * 2); // [2, 4, 6]
+
+// 반공변펑터 (Contravariant Functor)
+const log = (message) => console.log(message);
+const contramap = (fn, converter) => (input) => fn(converter(input));
+const logWithPrefix = contramap(log, (input) => `Logging: ${input}`);
+logWithPrefix('Hello'); // 'Logging: Hello'
+```
+
+- 함수형 프로그래밍에서 재밌는 부분이 방향을 바꿀 수 있다는 점이다.
+- 공변펑터의 경우 하나의 함수가 값을 변환할 때 입력에서 출력으로 향하는 방향이 그대로 유지된다. 함수형 프로그래밍에서는 이를 **값을 변환**하는 것이라고 생각할 수 있다.
+- 반공변 펑터는 사상의 방향을 뒤집는 펑터이다. 함수형 프로그래밍에서는 **입력 값을 변환**하는 역할을 한다고 볼 수 있다.
+- 반공변 펑터가 이해하기 힘들었는데 알고보니 함수에 값을 넣기 전에, 그 값을 먼저 바꾼다는 개념이었다.
+- 쉽게 요약하면 입력값을 미리 처리한다음에 본래 함수에 넘기는 것이다.
+
+<br/>
+
+```javascript
+const logNumber = (number) => console.log(number);
+const logPrefixedNumber = contramap(logNumber, (str) => parseInt(str, 10));
+
+// 이제 문자열로 전달된 숫자를 자동으로 변환한 후 로그에 출력
+logPrefixedNumber('42'); // 42
+```
+- 반공변 펑터가 정말 유용하게 쓰일 수 있는게 함수의 입력처리를 함수 본체와 분리를 할 수 있다는 점이다.
+- 만약 입력 값을 여러 가지 방식으로 변환하거나, 동일한 변환 과정을 여러 함수에 적용해야 한다면, `contramap` 같은 패턴은 코드의 재사용성을 높일 수 있다.
+
